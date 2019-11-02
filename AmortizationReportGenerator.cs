@@ -1,17 +1,41 @@
-﻿namespace AmortizationCalculator
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace AmortizationCalculator
 {
     class AmortizationReportGenerator
     {
-        public AmortiztionReport GenerateReport(LoanEntity loan)
+        readonly LoanTermCalculator LoanTermCalculator;
+        readonly DateUtil DateUtil;
+
+        public AmortizationReportGenerator(LoanTermCalculator loanTermCalculator, DateUtil dateUtil)
         {
+            LoanTermCalculator = loanTermCalculator;
+            DateUtil = dateUtil;
+        }
+
+        public AmortiztionReport GenerateReport(LoanEntity loan,
+                                                Dictionary<DateTime, double> paymentChangesByDate)
+        {
+
+            int loanLength = LoanTermCalculator.GetMonthsUntilPaid(loan).getMonthsUntilPaidOff();
+            ArrayList paymentDates = DateUtil.GetListOfDatesMonthApart(DateUtil.GetNow(), loanLength);
+
+            AmortiztionReport report = new AmortiztionReport(loan);
             double balance = loan.GetCurrentBalance();
-            AmortiztionReport report = new AmortiztionReport();
-            while (balance > 0)
+            foreach (DateTime date in paymentDates)
             {
-                AmortizationRow row = new AmortizationRow(report.GetReportRows().Count,
-                    balance,
-                    loan.GetMonthlyInterestRate(),
-                    loan.GetMinimumMonthlyPayment());
+                DateTime balanceEffectiveDate = DateUtil.FindDateBeforeFromList(date, new List<DateTime>(paymentChangesByDate.Keys));
+
+                double paymentForDate = date == balanceEffectiveDate ? loan.GetMinimumMonthlyPayment() : paymentChangesByDate[balanceEffectiveDate] ;
+
+                AmortizationRow row = new AmortizationRowGenerator()
+                                            .GenerateRow(report.GetReportRows().Count + 1,
+                                                         balance,
+                                                         loan.GetMonthlyInterestRate(),
+                                                         paymentForDate,
+                                                         date);
                 report.AddRow(row);
                 balance = row.GetBalance();
             }

@@ -42,10 +42,38 @@ namespace AmortizationCalculator
 
             for (int i = 0; i < numberOfDates; i++)
             {
-                list.Add(startDate.AddMonths(1));
+                list.Add(startDate.AddMonths(1 + i));
             }
 
             return list;
+        }
+        public DateTime FindDateBeforeFromList(DateTime targetDate, List<DateTime> dates)
+        {
+            dates.Sort((a, b) => a.CompareTo(b));
+
+            if (dates.Count == 0 || targetDate < dates[0])
+            {
+                return targetDate;
+            }
+            else
+            {
+                if (dates.Count == 1)
+                {
+                    return dates[0] < targetDate ? dates[0] : targetDate;
+                }
+                else
+                {
+                    for (int i = 0; i < dates.Count; i++)
+                    {
+                        if (targetDate > dates[i] &&
+                            targetDate < dates[i + 1])
+                        {
+                            return dates[i];
+                        }
+                    }
+                }
+            }
+            return dates[dates.Count - 1];
         }
     }
 }

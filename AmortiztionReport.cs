@@ -4,7 +4,14 @@ namespace AmortizationCalculator
 {
     public class AmortiztionReport
     {
-        private ArrayList ReportRows = new ArrayList();
+        private readonly ArrayList ReportRows = new ArrayList();
+        private readonly LoanEntity Loan;
+
+        public AmortiztionReport(LoanEntity loan)
+        {
+            Loan = loan;
+        }
+
         public void AddRow(AmortizationRow row)
         {
             ReportRows.Add(row);
@@ -13,6 +20,11 @@ namespace AmortizationCalculator
         public ArrayList GetReportRows()
         {
             return ReportRows;
+        }
+
+        public LoanEntity GetLoan()
+        {
+            return Loan;
         }
     }
 }
