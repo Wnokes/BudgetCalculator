@@ -4,7 +4,7 @@ namespace AmortizationCalculator
 {
     public class AmortizationReportConsolePrinter
     {
-        public void PrintReport(AmortiztionReport report)
+        public void PrintReport(AmortizationReport report)
         {
             LoanEntity loan = report.GetLoan();
             Console.WriteLine("LOAN AT TIME OF REPORT");

@@ -1,13 +1,14 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace AmortizationCalculator
 {
-    public class AmortiztionReport
+    public class AmortizationReport
     {
-        private readonly ArrayList ReportRows = new ArrayList();
+        private readonly List<AmortizationRow> ReportRows = new List<AmortizationRow>();
         private readonly LoanEntity Loan;
 
-        public AmortiztionReport(LoanEntity loan)
+        public AmortizationReport(LoanEntity loan)
         {
             Loan = loan;
         }
@@ -17,7 +18,7 @@ namespace AmortizationCalculator
             ReportRows.Add(row);
         }
 
-        public ArrayList GetReportRows()
+        public List<AmortizationRow> GetReportRows()
         {
             return ReportRows;
         }

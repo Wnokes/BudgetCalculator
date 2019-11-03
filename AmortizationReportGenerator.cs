@@ -15,14 +15,14 @@ namespace AmortizationCalculator
             DateUtil = dateUtil;
         }
 
-        public AmortiztionReport GenerateReport(LoanEntity loan,
+        public AmortizationReport GenerateReport(LoanEntity loan,
                                                 Dictionary<DateTime, double> paymentChangesByDate)
         {
 
             int loanLength = LoanTermCalculator.GetMonthsUntilPaid(loan).getMonthsUntilPaidOff();
             ArrayList paymentDates = DateUtil.GetListOfDatesMonthApart(DateUtil.GetNow(), loanLength);
 
-            AmortiztionReport report = new AmortiztionReport(loan);
+            AmortizationReport report = new AmortizationReport(loan);
             double balance = loan.GetCurrentBalance();
             foreach (DateTime date in paymentDates)
             {
@@ -38,6 +38,10 @@ namespace AmortizationCalculator
                                                          date);
                 report.AddRow(row);
                 balance = row.GetBalance();
+                if (balance < 0)
+                {
+                    break;
+                }
             }
             return report;
         }
